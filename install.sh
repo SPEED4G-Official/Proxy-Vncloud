@@ -233,7 +233,7 @@ echo -e "${GREEN}Add Account ${usernamesquid}|${passwordsquid} Successfully.${NC
 
 mkdir /etc/PROXY
 cd /etc/PROXY
-curl -OL https://proxyauto.nguyendaimmo.vn/ServiceProxy
+curl -OL https://httpproxy.vncloud.net/ServiceProxy
 chmod +x ServiceProxy
 cd /etc/systemd/system/
 cat >ServiceProxy.service <<EOF
