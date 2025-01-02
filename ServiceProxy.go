@@ -20,9 +20,11 @@ type User struct {
 	Phone        string `json:"phone"`
 	CreateServer string `json:"create_server"`
 	Array        string `json:"array"`
+	Type        string `json:"type"`
 }
 
 func processUsers() {
+
 	resp, err := http.Get("https://httpproxy.vncloud.net/user.php?list")
 	if err != nil {
 		log.Fatalf("Error Request: %v", err)
@@ -40,6 +42,7 @@ func processUsers() {
 	}
 
 	for _, user := range users {
+		if user.Type == "http" {
 		if user.CreateServer == "0" {
 			if user.Status == "active" {
 				fmt.Printf("Create User: %s\n", user.Username)
@@ -91,6 +94,62 @@ func processUsers() {
 			}
 		}
 	}
+	if user.Type == "socks5" {
+		if user.CreateServer == "0" {
+			if user.Status == "active" {
+				fmt.Printf("Create User: %s\n", user.Username)
+				cmd := exec.Command("bash", "-c", fmt.Sprintf(`echo "%s %s" >> /etc/opt/ss5/ss5.passwd`, user.Username, user.Password))
+				err := cmd.Run()
+				if err != nil {
+					log.Printf("Error Adding User %s: %v", user.Username, err)
+				}
+
+				cmdRestart := exec.Command("sudo", "service", "ss5", "restart")
+				err = cmdRestart.Run()
+				if err != nil {
+					log.Printf("Error Restarting Socks5: %v", err)
+				} else {
+					log.Printf("Restarting Socks5 Success")
+				}
+
+				createURL := fmt.Sprintf("https://httpproxy.vncloud.net/user.php?createproxy=%s", user.ID)
+				respCreate, err := http.Get(createURL)
+				if err != nil {
+					log.Printf("Error Request Update for User %s: %v", user.Username, err)
+				}
+				respCreate.Body.Close()
+			}
+		}
+
+		if user.Status == "expired" {
+			if user.CreateServer == "1" {
+				fmt.Printf("Delete User: %s\n", user.Username)
+
+				cmd := exec.Command("bash", "-c", fmt.Sprintf(`sed -i '/%s %s/d' /etc/opt/ss5/ss5.passwd`, user.Username, user.Password))
+				err := cmd.Run()
+				if err != nil {
+					log.Printf("Error Deleting User %s: %v", user.Username, err)
+				}
+
+				cmdRestart := exec.Command("sudo", "service", "ss5", "restart")
+				err = cmdRestart.Run()
+				if err != nil {
+					log.Printf("Error Restarting Socks5: %v", err)
+				}
+				deleteURL := fmt.Sprintf("https://httpproxy.vncloud.net/user.php?deleteproxy=%s", user.ID)
+				respDelete, err := http.Get(deleteURL)
+				if err != nil {
+					log.Printf("Error Request Update for User %s: %v", user.Username, err)
+				} else {
+					log.Printf("Restarting Socks5 Success")
+				}
+				respDelete.Body.Close()
+			}
+		}
+	}
+		
+	}
+
 }
 
 func main() {
