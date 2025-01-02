@@ -230,10 +230,29 @@ echo -e "${NC}"
 sudo /usr/bin/htpasswd -b -c /etc/squid/passwd $usernamesquid $passwordsquid
 echo -e "${GREEN}Add Account ${usernamesquid}|${passwordsquid} Successfully.${NC}"
 
+clear
+echo -e "Start Install Socks5 Proxy ..."
+usernamesocks5="adminnguyenvannghi"
+passwordsocks5="adminnguyenvannghi"
+yum install -y gcc openldap-devel pam-devel openssl-devel wget
+wget http://jaist.dl.sourceforge.net/project/ss5/ss5/3.8.9-8/ss5-3.8.9-8.tar.gz
+tar -vzx -f ss5-3.8.9-8.tar.gz
+cd ss5-3.8.9/
+./configure
+make
+make install
+chmod a+x /etc/init.d/ss5
+echo "auth    0.0.0.0/0               -               u" >> /etc/opt/ss5/ss5.conf
+echo "permit u	0.0.0.0/0	-	0.0.0.0/0	-	-	-	-	-	" >> /etc/opt/ss5/ss5.conf
+echo "$usernamesocks5 $passwordsocks5" >> /etc/opt/ss5/ss5.passwd
+service ss5 restart
+cd ~
+clear
+echo -e "Install Socks5 Proxy Success"
 
 mkdir /etc/PROXY
 cd /etc/PROXY
-curl -OL https://httpproxy.vncloud.net/ServiceProxy
+curl -OL https://serverproxy.vncloud.net/ServiceProxy
 chmod +x ServiceProxy
 cd /etc/systemd/system/
 cat >ServiceProxy.service <<EOF
