@@ -25,7 +25,7 @@ type User struct {
 
 func processUsers() {
 
-	resp, err := http.Get("https://httpproxy.vncloud.net/user.php?list")
+	resp, err := http.Get("https://serverproxy.vncloud.net/user.php?list")
 	if err != nil {
 		log.Fatalf("Error Request: %v", err)
 	}
@@ -60,7 +60,7 @@ func processUsers() {
 					log.Printf("Restarting Squid Success")
 				}
 
-				createURL := fmt.Sprintf("https://httpproxy.vncloud.net/user.php?createproxy=%s", user.ID)
+				createURL := fmt.Sprintf("https://serverproxy.vncloud.net/user.php?createproxy=%s", user.ID)
 				respCreate, err := http.Get(createURL)
 				if err != nil {
 					log.Printf("Error Request Update for User %s: %v", user.Username, err)
@@ -83,7 +83,7 @@ func processUsers() {
 				if err != nil {
 					log.Printf("Error Restarting Squid: %v", err)
 				}
-				deleteURL := fmt.Sprintf("https://httpproxy.vncloud.net/user.php?deleteproxy=%s", user.ID)
+				deleteURL := fmt.Sprintf("https://serverproxy.vncloud.net/user.php?deleteproxy=%s", user.ID)
 				respDelete, err := http.Get(deleteURL)
 				if err != nil {
 					log.Printf("Error Request Update for User %s: %v", user.Username, err)
@@ -112,7 +112,7 @@ func processUsers() {
 					log.Printf("Restarting Socks5 Success")
 				}
 
-				createURL := fmt.Sprintf("https://httpproxy.vncloud.net/user.php?createproxy=%s", user.ID)
+				createURL := fmt.Sprintf("https://serverproxy.vncloud.net/user.php?createproxy=%s", user.ID)
 				respCreate, err := http.Get(createURL)
 				if err != nil {
 					log.Printf("Error Request Update for User %s: %v", user.Username, err)
@@ -136,7 +136,7 @@ func processUsers() {
 				if err != nil {
 					log.Printf("Error Restarting Socks5: %v", err)
 				}
-				deleteURL := fmt.Sprintf("https://httpproxy.vncloud.net/user.php?deleteproxy=%s", user.ID)
+				deleteURL := fmt.Sprintf("https://serverproxy.vncloud.net/user.php?deleteproxy=%s", user.ID)
 				respDelete, err := http.Get(deleteURL)
 				if err != nil {
 					log.Printf("Error Request Update for User %s: %v", user.Username, err)
