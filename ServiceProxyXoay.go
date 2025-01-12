@@ -15,7 +15,7 @@ type User struct {
 	Username     string `json:"username"`
 	Password     string `json:"password"`
 	Status       string `json:"status"`
-  StatusAdd       string `json:"status_add_user"`
+  	StatusAdd    string `json:"status_add_user"`
 }
 func reloadConfig() {
 	url := "https://serverproxy.vncloud.net/vnproxyrandom.php?action=config"
@@ -30,7 +30,7 @@ func reloadConfig() {
 	}
 	result := string(body)
 	if result == "error" {
-		log.Println("Operation failed: Server returned 'error'")
+		log.Println("Config Not Edit")
 		return
 	}
 
@@ -39,14 +39,13 @@ func reloadConfig() {
 	if err != nil {
 		log.Fatalf("Failed to write to file %s: %v", filePath, err)
 	}
-	log.Printf("Successfully updated %s", filePath)
-	cmd := exec.Command("systemctl", "restart", "squid")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		log.Fatalf("Failed to restart squid: %v", err)
+	log.Printf("Successfully Updated %s", filePath)
+	cmdRestart := exec.Command("sudo", "systemctl", "restart", "squid")
+	err = cmdRestart.Run()
+	if err != nil {
+	log.Printf("Error Restarting Squid: %v", err)
 	}
-	log.Println("Successfully restarted squid")
+	log.Println("Restarting Squid Success")
 }
 
 func processUsers() {
@@ -154,4 +153,3 @@ func main() {
 		time.Sleep(1 * time.Second)
 	}
 }
-
