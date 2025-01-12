@@ -151,7 +151,7 @@ func main() {
 	for {
 		processUsers()
     reloadConfig()
-		time.Sleep(30 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 }
 
