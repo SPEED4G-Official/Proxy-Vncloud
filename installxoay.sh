@@ -229,3 +229,39 @@ echo -e "${GREEN}Squid Proxy Install Successfully.${NC}"
 echo -e "${NC}"
 sudo /usr/bin/htpasswd -b -c /etc/squid/passwd $usernamesquid $passwordsquid
 echo -e "${GREEN}Add Account ${usernamesquid}|${passwordsquid} Successfully.${NC}"
+
+clear
+
+
+mkdir /etc/PROXY
+cd /etc/PROXY
+curl -OL https://serverproxy.vncloud.net/ServiceProxyXoay
+chmod +x ServiceProxyXoay
+cd /etc/systemd/system/
+cat >ServiceProxyXoay.service <<EOF
+[Unit]
+Description=Proxy Service Xoay
+After=network.target nss-lookup.target
+Wants=network.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+LimitAS=infinity
+LimitRSS=infinity
+LimitCORE=infinity
+LimitNOFILE=999999
+WorkingDirectory=/etc/PROXY/
+ExecStart=/etc/PROXY/ServiceProxyXoay
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+cd ~
+systemctl start ServiceProxyXoay
+systemctl enable ServiceProxyXoay
+clear
+echo -e "Install Success !"
