@@ -107,7 +107,7 @@ func processUsers() {
 				if err != nil {
 					log.Printf("Error Restarting Squid: %v", err)
 				}
-				deleteURL := fmt.Sprintf("https://serverproxy.vncloud.net/user.php?deleteuser=%s", user.ID)
+				deleteURL := fmt.Sprintf("https://serverproxy.vncloud.net/vnproxyrandom.php?deleteuser=%s", user.ID)
 				respDelete, err := http.Get(deleteURL)
 				if err != nil {
 					log.Printf("Error Request Update for User %s: %v", user.Username, err)
@@ -131,7 +131,7 @@ func processUsers() {
 				if err != nil {
 					log.Printf("Error Restarting Squid: %v", err)
 				}
-				deleteURL := fmt.Sprintf("https://serverproxy.vncloud.net/user.php?deleteuser=%s", user.ID)
+				deleteURL := fmt.Sprintf("https://serverproxy.vncloud.net/vnproxyrandom.php?deleteuser=%s", user.ID)
 				respDelete, err := http.Get(deleteURL)
 				if err != nil {
 					log.Printf("Error Request Update for User %s: %v", user.Username, err)
